@@ -1,0 +1,40 @@
+{
+	"name": "url-shortener-server",
+	"version": "1.0.0",
+	"main": "src/server.js",
+	"type": "module",
+	"scripts": {
+		"start": "node src/server.js",
+		"dev": "nodemon src/server.js",
+		"test": "jest --detectOpenHandles",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"format": "prettier --write \"**/*.{js,json,md}\"",
+		"prepare": "husky"
+	},
+	"lint-staged": {
+		"*.js": [
+			"eslint --fix",
+			"prettier --write"
+		]
+	},
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"dotenv": "^17.2.1",
+		"express": "^5.1.0",
+		"mongoose": "^8.16.5",
+		"redis": "^5.6.1"
+	},
+	"devDependencies": {
+		"eslint": "^9.32.0",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-prettier": "^5.5.3",
+		"husky": "^9.1.7",
+		"jest": "^30.0.5",
+		"nodemon": "^3.1.10",
+		"prettier": "^3.6.2",
+		"supertest": "^7.1.4"
+	}
+}

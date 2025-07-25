@@ -1,0 +1,52 @@
+version: '1.0'
+
+# Defines the services (containers) that make up the application stack.
+
+services:
+  # The Node.js/Express API Service
+  api:
+    # Instructions for building the Docker image for this service
+    build:
+      # The build context is the 'server' directory
+      context: ./server
+      # The Dockerfile to use is located in the context directory.
+      dockerfile: Dockerfile
+    # Maps port 5001 of the host machine to port 5001 in the container 
+    ports:
+      - "5001:5001"
+    # Mounts the local './server' directory into '/app' in the container.
+    # This enables live-reloading of code changes without rebuilding the image.
+    volumes:
+      - ./server:/app
+    # Defines environment variables available to the 'api' service.
+    # These are used to connect to the other services by their service names.
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/url-shortener
+      - REDIS_URI=redis://redis:6379
+      - PORT=5001
+    # Ensures that 'mongo' and 'redis' services are started before this one.
+    depends_on:
+      - mongo
+      - redis
+  # The MongoDB database service
+  mongo:
+    # Uses the official 'mongo' image from Docker Hub
+    image: mongo:latest
+    # Maps port 27017 for direct database access from your machine if needed.
+    ports:
+      - "27017:27017"
+    # Persists database data on the host machine to survive container restarts.
+    volumes:
+      -mongo-data:/data/db
+  
+  # The Redis caching service
+  redis:
+    # Uses the official 'redis' image from Docker Hub
+    image: redis:latest
+    # Maps port 6379 for direct Redis access from your machine if needed
+    ports:
+      - '6379:6379'
+# Defines a named volume for persisting MongoDB data
+volumes:
+  mongo-data:
+    
