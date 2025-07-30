@@ -6,6 +6,8 @@ services:
     environment:
       # This flag tells server.js to load secrets from AWS.
       - NODE_ENV=production
+    # This overrides the Dockerfile's CMD for a robust production start.
+    command: node src/server.js
     # Unset the local development directives.
     env_file: []
     volumes: []
