@@ -1,4 +1,4 @@
-version: '1.0'
+version: '3.8'
 
 # Defines the services (containers) that make up the application stack.
 
@@ -14,6 +14,8 @@ services:
     # Maps port 5001 of the host machine to port 5001 in the container 
     ports:
       - "5001:5001"
+    env_file:
+      - ./server/.env
     # Mounts the local './server' directory into '/app' in the container.
     # This enables live-reloading of code changes without rebuilding the image.
     volumes:
@@ -24,6 +26,7 @@ services:
     # These are used to connect to the other services by their service names.
     environment:
       - MONGO_URI=${MONGO_URI}
+      - NODE_ENV=development
       # - REDIS_URI=redis://redis:6379
       # - PORT=5001
     # # Ensures that 'mongo' and 'redis' services are started before this one.

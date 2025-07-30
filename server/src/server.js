@@ -3,13 +3,22 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import path from 'path';
 import dotenvExpand from 'dotenv-expand'
+import {loadConfig as loadAWSConfig} from './config/configLoader.js'
 
-
-// Load the environment variable from .env file
-const myEnv = dotenv.config({ path: path.resolve(".env"), debug: true });
-dotenvExpand.expand(myEnv)
-console.log(dotenvExpand.expand(myEnv));
-
+const startServer = async () => {
+  // Conditionally load configuration based on the environment
+  if (process.env.NODE_ENV === 'production') {
+    // In Production(on AWS), load from Parameter Store
+    await loadAWSConfig();
+  } else {
+    // In Development(locally), load from the .env file
+    console.log('Running in development mode. Loading secrets from .env file');
+    // Load the environment variable from .env file
+    const myEnv = dotenv.config({ path: path.resolve('.env'), debug: true });
+    dotenvExpand.expand(myEnv);
+    // console.log(dotenvExpand.expand(myEnv));
+  }
+}
 
 // Connect to MongoDB
 connectDB();
@@ -24,3 +33,5 @@ app.get('/health', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is listening on http://localhost:${PORT}`);
 });
+
+startServer();
