@@ -1,8 +1,11 @@
-version: '3.8'
+# /docker-compose.prod.yml
+# This override file is for PRODUCTION DEPLOYMENT on AWS.
 
 services:
   api:
     environment:
+      # This flag tells server.js to load secrets from AWS.
       - NODE_ENV=production
+    # Unset the local development directives.
     env_file: []
     volumes: []

@@ -25,7 +25,6 @@ services:
     # Defines environment variables available to the 'api' service.
     # These are used to connect to the other services by their service names.
     environment:
-      - MONGO_URI=${MONGO_URI}
       - NODE_ENV=development
       # - REDIS_URI=redis://redis:6379
       # - PORT=5001
