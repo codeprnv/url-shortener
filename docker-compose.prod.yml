@@ -1,10 +1,11 @@
+# This is a single, unified configuration file for production on AWS.
 services:
   api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
     environment:
-      # This flag tells server.js to load secrets from AWS.
       - NODE_ENV=production
-    # This overrides the Dockerfile's CMD for a robust production start.
     command: node src/server.js
-    # Unset the local development directives.
-    env_file: []
-    volumes: []
