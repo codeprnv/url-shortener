@@ -1,6 +1,3 @@
-# /docker-compose.prod.yml
-# This override file is for PRODUCTION DEPLOYMENT on AWS.
-
 services:
   api:
     environment:
