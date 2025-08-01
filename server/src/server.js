@@ -1,32 +1,44 @@
-import express from 'express';
+// server/src/server.js
+
 import dotenv from 'dotenv';
+// --- FIX: Load .env variables first. This is safe for production ---
+// This runs immediately and populates process.env from your .env file.
+// In production, where there is no .env file, it does nothing, which is fine.
+dotenv.config();
+
+// --- Now that process.env is populated, import all other modules ---
+import express from 'express';
 import connectDB from './config/db.js';
-import path from 'path';
-import dotenvExpand from 'dotenv-expand'
-import {loadConfig as loadAWSConfig} from './config/configLoader.js'
+import { connectRedis } from './config/redis.js';
+import { loadConfig as loadAWSConfig } from './config/configLoader.js';
+import urlRoutes from './routes/url.js';
+import redirectRoutes from './routes/redirect.js';
 
 const startServer = async () => {
-  // Step 1: Conditionally load configuration based on the environment
+  // In a production environment, load secrets from AWS.
+  // This will securely overwrite any values needed for production.
   if (process.env.NODE_ENV === 'production') {
-    // In production, load from Parameter Store
     await loadAWSConfig();
   } else {
-    // In development, load from the .env file
-    console.log('Running in development mode. Loading secrets from .env file.');
-    dotenv.config();
+    console.log('Running in development mode.');
   }
 
-  // Step 2: Now that process.env is populated, connect to the database.
-  // This MUST be inside the async function.
+  // Connect to services using the final, correct configuration.
   await connectDB();
+  await connectRedis();
 
-  // Step 3: Create and configure the Express app
+  // Create and configure the Express app
   const app = express();
   const PORT = process.env.PORT || 5001;
 
+  app.use(express.json());
+
+  // --- Routes ---
   app.get('/health', (req, res) => {
     res.status(200).send({ status: 'ok', message: 'API is running' });
   });
+  app.use('/api/v1', urlRoutes);
+  app.use('/', redirectRoutes);
 
   app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);

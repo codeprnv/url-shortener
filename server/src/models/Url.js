@@ -14,8 +14,8 @@ const urlSchema = new mongoose.Schema({
     required: true,
     unique: true,
     trim: true,
-    minLength: 6,
-    maxLength: 8,
+    // minLength: 6,
+    // maxLength: 8,
     index: true, // Crucial for fast lookups during redirection
   },
   clicks: {
