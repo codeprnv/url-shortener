@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
-@layer base{
-  body{
-    @apply bg-black/85 w-full h-full min-w-[375px] overflow-x-hidden;
+@layer base {
+  body {
+    @apply bg-[#0B101B] w-full h-full min-w-[375px] overflow-x-hidden font-[Inter];
   }
 }
