@@ -41,7 +41,7 @@ const HeroSection = () => {
 						/>
 						<button
 							type="submit"
-							className="cursor-pointer text-white absolute end-1.5 bottom-2.5 sm:bottom-1.5 bg-[#144EE3] px-4 py-3 rounded-full md:rounded-3xl drop-shadow-lg outline-2 outline-[#144EE3] text-base font-semibold"
+							className="cursor-pointer text-white absolute end-1.5 bottom-2.5 sm:bottom-1.5 bg-[#144EE3] px-4 py-3 rounded-full md:rounded-3xl drop-shadow-lg outline-2 outline-[#144EE3] text-base font-semibold hover:bg-[#0516b4] hover:outline-[#0516b4] duration-250 transition-colors"
 						>
 							{isMobile ? (
 								<img src={Arrow_Right} alt="Right Arrow" />

@@ -2,6 +2,7 @@ import Cubes from "../assets/Cubes.png";
 import Swirl from "../assets/Swirl.png";
 import Footer from "../components/Footer.tsx";
 import HeroSection from "../components/HeroSection.tsx";
+import InfoTable from "../components/InfoTable.tsx";
 import NavBar from "../components/NavBar.tsx";
 const App = () => {
 	return (
@@ -15,6 +16,7 @@ const App = () => {
 				<img src={Cubes} alt="cubes-background" />
 			</div>
 			<HeroSection />
+			<InfoTable/>
 			<Footer/>
 		</div>
 	);
