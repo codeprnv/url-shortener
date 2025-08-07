@@ -1,35 +1,22 @@
+import React from "react";
 import CopyIcon from "../assets/copy-icon.svg";
 import ActiveLinkCopy from "../assets/active-link-copy.svg";
 import InactiveLinkCopy from "../assets/inactive-link-copy.svg";
+import getFavicons from "../utils/getFavicons";
 
-interface RowDescriptionsType {
-	shortlink: string;
-	originallink: string;
-	qrcode: string;
-	qrcodedescription: string;
-	clicks: number;
-	status: string;
-	date: string;
-}
+const LinkRow = ({ link }) => {
+	const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
+	
+	const {
+		shortlink,
+		originallink,
+		qrcode,
+		qrcodedescription,
+		clicks,
+		status,
+		date,
+	} = link;
 
-const RowDescriptions = ({
-	shortlink,
-	originallink,
-	qrcode,
-	qrcodedescription,
-	clicks,
-	status,
-	date,
-}: RowDescriptionsType) => {
-	const getFavicons = (url: string) => {
-		try {
-			const domain = new URL(url).hostname;
-			return `https://www.google.com/s2/favicons?sz=32&domain=${domain}`;
-		} catch (error) {
-			console.error(`An error occured fetching favicons: ${error}`);
-			return "";
-		}
-	};
 	return (
 		<tr className="text-[#C9CED6] font-bold bg-transparent text-left backdrop-blur-xl drop-shadow-xl">
 			<td className="px-6 py-5 text-sm font-light">
@@ -56,10 +43,10 @@ const RowDescriptions = ({
 				}`}
 			>
 				<div className="flex gap-2 items-center justify-right">
-					<span>{status}</span>
+					<span>{status === true ? "Active" : "Inactive"}</span>
 					<button className="cursor-pointer">
 						<img
-							src={status === "Inactive" ? InactiveLinkCopy : ActiveLinkCopy}
+							src={status === false ? InactiveLinkCopy : ActiveLinkCopy}
 							alt="status-copy-btn"
 						/>
 					</button>
@@ -70,4 +57,4 @@ const RowDescriptions = ({
 	);
 };
 
-export default RowDescriptions;
+export default LinkRow;
