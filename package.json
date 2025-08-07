@@ -1,13 +1,16 @@
 {
-	"name": "url-shortener",
-	"private": true,
-	"version": "1.0.0",
-	"scripts": {
-		"start": "concurrently \"npm:frontend\" \"npm:backend\"",
-		"frontend": "npm --prefix client run dev",
-		"backend": "npm --prefix server run dev"
-	},
-	"devDependencies": {
-		"concurrently": "^9.2.0"
-	}
+  "name": "url-shortener",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "start": "concurrently \"npm:frontend\" \"npm:backend\"",
+    "frontend": "npm --prefix client run dev",
+    "backend": "npm --prefix server run dev",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.14"
+  }
 }

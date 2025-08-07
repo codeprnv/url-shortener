@@ -1,6 +1,6 @@
 // server\src\routes\url.js
 
-import { Router } from "express";
+import { Router } from 'express';
 import { shortenUrl } from '../controllers/urlController.js';
 
 const router = Router();

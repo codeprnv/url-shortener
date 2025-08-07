@@ -7,9 +7,9 @@ services:
       context: ./server
       # The Dockerfile to use is located in the context directory.
       dockerfile: Dockerfile
-    # Maps port 5001 of the host machine to port 5001 in the container 
+    # Maps port 5001 of the host machine to port 5001 in the container
     ports:
-      - "5001:5001"
+      - '5001:5001'
     env_file:
       - ./server/.env
     # Mounts the local './server' directory into '/app' in the container.
