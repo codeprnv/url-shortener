@@ -4,6 +4,7 @@ import { Url, Counter } from '../models/Url.js';
 import { encode } from '../utils/base62.js';
 import { URL } from 'url';
 import { redisClient } from '../config/redis.js';
+import qrcode from 'qrcode';
 
 /*
  * Gets the next unique sequence number from the Counter collection
@@ -35,18 +36,30 @@ export const shortenUrl = async (req, res) => {
     // --- Check if the URL already exists to prevent duplicates ---
     let url = await Url.findOne({ originalUrl });
     if (url) {
-      return res
-        .status(200)
-        .json({ shortUrl: `${process.env.BASE_URL}/${url.shortCode}` });
+      return res.status(200).json({
+        shortlink: `${process.env.BASE_URL}/${url.shortCode}`,
+        originallink: url.originalUrl,
+        qrcode: url.qrcode,
+        qrcodedescription: url.qrcodedescription,
+        clicks: url.clicks,
+        status: url.status,
+        date: url.createdAt.toISOString(),
+      });
     }
 
     //  --- Create New Short URL
     const urlId = await getNextSequence();
     const shortCode = encode(urlId);
+    const shortUrl = `${process.env.BASE_URL}/${shortCode}`;
+
+    // --- Generate QR Code ---
+    const qrCodeDataUrl = await qrcode.toDataURL(shortUrl);
 
     url = new Url({
       originalUrl,
       shortCode,
+      qrcode: qrCodeDataUrl,
+      qrcodedescription: `QR Code for ${shortUrl}`,
     });
 
     await url.save();
@@ -58,12 +71,45 @@ export const shortenUrl = async (req, res) => {
       },
     });
 
-    return res
-      .status(201)
-      .json({ shortUrl: `${process.env.BASE_URL}/${shortCode}` });
+    return res.status(201).json({
+      shortlink: shortUrl,
+      originallink: url.originalUrl,
+      qrcode: url.qrcode,
+      qrcodedescription: url.qrcodedescription,
+      clicks: url.clicks,
+      status: url.status,
+      date: url.createdAt.toISOString(),
+    });
   } catch (err) {
     console.error('Server error: ', err);
     res.status(500).json({ error: 'Server error, please try again later.' });
+  }
+};
+
+// --- Function to return URLMETADATA ---
+export const getUrlMetaData = async (req, res) => {
+  try {
+    const { shortCode } = req.params;
+    const url = await Url.findOne({ shortCode });
+
+    if (!url) {
+      return res.status(404).json({ error: 'URL metadata not found!!' });
+    }
+
+    const responseData = {
+      shortlink: `${process.env.BASE_URL}/${url.shortCode}`,
+      originallink: url.originalUrl,
+      qrcode: url.qrcode,
+      qrcodedescription: url.qrcodedescription,
+      clicks: url.clicks,
+      status: url.status,
+      date: url.createdAt.toISOString(),
+    };
+
+    return res.status(200).json(responseData);
+  } catch (err) {
+    console.error(`Metadata fetch error: ${err}`);
+    res.status(500).json({ error: `Server error, Please try again later!!` });
   }
 };
 

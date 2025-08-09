@@ -14,8 +14,6 @@ const urlSchema = new mongoose.Schema({
     required: true,
     unique: true,
     trim: true,
-    // minLength: 6,
-    // maxLength: 8,
     index: true, // Crucial for fast lookups during redirection
   },
   clicks: {
@@ -27,9 +25,23 @@ const urlSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  // expiresAt: {
-  //     type: Date
-  // }
+  status: {
+    type: Boolean,
+    default: true,
+  },
+  qrcode: {
+    type: String,
+    required: true,
+  },
+  qrcodedescription: {
+    type: String,
+    required: true,
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    // required: true,
+    ref: 'User', // Creates a reference to the User Model
+  },
 });
 
 const counterSchema = new mongoose.Schema({

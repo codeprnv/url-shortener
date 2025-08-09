@@ -8,11 +8,13 @@ dotenv.config();
 
 // --- Now that process.env is populated, import all other modules ---
 import express from 'express';
+import cors from 'cors';
 import connectDB from './config/db.js';
 import { connectRedis } from './config/redis.js';
 import { loadConfig as loadAWSConfig } from './config/configLoader.js';
 import urlRoutes from './routes/url.js';
 import redirectRoutes from './routes/redirect.js';
+import authRoutes from './routes/auth.js';
 
 const startServer = async () => {
   // In a production environment, load secrets from AWS.
@@ -32,11 +34,17 @@ const startServer = async () => {
   const PORT = process.env.PORT || 5001;
 
   app.use(express.json());
+  app.use(cors(
+    {
+      origin: ['http://localhost:5173']
+    }
+  ));
 
   // --- Routes ---
   app.get('/health', (req, res) => {
     res.status(200).send({ status: 'ok', message: 'API is running' });
   });
+  app.use('/api/auth', authRoutes);
   app.use('/api/v1', urlRoutes);
   app.use('/', redirectRoutes);
 

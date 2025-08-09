@@ -23,11 +23,15 @@
   "description": "",
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.856.0",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
     "debug": "^4.4.1",
     "dotenv": "^17.2.1",
     "dotenv-expand": "^12.0.2",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.5",
+    "qrcode": "^1.5.4",
     "redis": "^5.6.1"
   },
   "devDependencies": {

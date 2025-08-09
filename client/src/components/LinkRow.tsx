@@ -3,6 +3,9 @@ import ActiveLinkCopy from '../assets/active-link-copy.svg';
 import InactiveLinkCopy from '../assets/inactive-link-copy.svg';
 import getFavicons from '../utils/getFavicons';
 import type { linksDataType } from '../utils/linksData';
+import { format } from 'date-fns';
+import { toast } from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
 const LinkRow = ({ link }: { link: linksDataType }) => {
   const {
@@ -15,13 +18,29 @@ const LinkRow = ({ link }: { link: linksDataType }) => {
     date,
   } = link;
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(shortlink);
+      toast.success('Copied to Clipboard', {
+        duration: 2500,
+      });
+    } catch (error) {
+      console.error(`Error in writing content to clipboard: ${error}`);
+    }
+  };
+
   return (
     <tr className="border-b border-gray-800/50 bg-transparent text-left text-[#C9CED6] drop-shadow-xl backdrop-blur-xl">
       {/* Short Link */}
       <td className="px-6 py-5 text-sm font-light">
         <div className="flex items-center gap-2">
-          <span>{shortlink}</span>
-          <button className="cursor-pointer">
+          <Link
+            to={shortlink}
+            className="hover:text-[#144EE3]"
+          >
+            {shortlink}
+          </Link>
+          <button className="cursor-pointer" onClick={handleCopy}>
             <img src={CopyIcon} alt="copy" />
           </button>
         </div>
@@ -30,19 +49,20 @@ const LinkRow = ({ link }: { link: linksDataType }) => {
       {/* Original Link */}
       <td className="px-6 py-5 text-sm font-light">
         <div className="justify-left flex items-center gap-2">
-          <img
-            src={getFavicons(originallink)}
-            alt="favicon"
-            className="h-4 w-4"
-          />
-          <span className="max-w-xs truncate">{originallink}</span>
+          <img src={getFavicons(originallink)} alt="favicon" />
+          <Link
+            to={originallink}
+            className="max-w-xs truncate hover:text-[#144EE3]"
+          >
+            {originallink}
+          </Link>
         </div>
       </td>
 
       {/* QR Code */}
       <td className="px-6 py-5 text-sm font-light">
         <div className="flex justify-center">
-          <img src={qrcode} alt={qrcodedescription} className="h-8 w-8" />
+          <img src={qrcode} alt={qrcodedescription} className="h-14 w-14" />
         </div>
       </td>
 
@@ -67,7 +87,9 @@ const LinkRow = ({ link }: { link: linksDataType }) => {
       </td>
 
       {/* Date */}
-      <td className="px-6 py-5 text-center text-sm font-light">{date}</td>
+      <td className="px-6 py-5 text-center text-sm font-light">
+        {format(date, 'dd-MM-yyyy')}
+      </td>
     </tr>
   );
 };
