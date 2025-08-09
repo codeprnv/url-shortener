@@ -34,11 +34,8 @@ const LinkRow = ({ link }: { link: linksDataType }) => {
       {/* Short Link */}
       <td className="px-6 py-5 text-sm font-light">
         <div className="flex items-center gap-2">
-          <Link
-            to={shortlink}
-            className="hover:text-[#144EE3]"
-          >
-            {shortlink}
+          <Link to={shortlink} className="hover:text-[#144EE3]">
+            {`https://linkly.com/${shortlink.split('/')[3]}`}
           </Link>
           <button className="cursor-pointer" onClick={handleCopy}>
             <img src={CopyIcon} alt="copy" />

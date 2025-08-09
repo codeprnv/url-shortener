@@ -48,7 +48,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center">
+    <div className="flex min-h-screen w-full flex-col items-center justify-start mb-20">
       <NavBar />
       {/* Background */}
       <div className="pointer-events-none absolute top-0 z-[-1] flex h-screen w-screen items-center justify-center overflow-hidden">

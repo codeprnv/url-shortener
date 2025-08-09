@@ -2,6 +2,6 @@
 
 @layer base {
   body {
-    @apply h-full w-full min-w-[375px] overflow-x-hidden bg-[#0B101B] font-[Inter];
+    @apply h-full w-full min-w-[375px] overflow-x-hidden bg-[#0B101B] font-[Inter] overflow-y-auto;
   }
 }
