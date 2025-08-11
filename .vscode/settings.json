@@ -1,3 +1,4 @@
 {
-	"cSpell.words": ["nodemon"]
+  "cSpell.words": ["nodemon"],
+  "git.ignoreLimitWarning": true
 }

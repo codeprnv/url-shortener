@@ -12,7 +12,7 @@ const LinksTable = ({ links }: { links: linksDataType[] }) => {
     <div className="flex w-full flex-col gap-4 md:max-w-[90vw] xl:max-w-[85vw]">
       {/* Conditionally render the title only if there are links */}
       {links.length > 0 && (
-        <h1 className="text-2xl font-bold text-[#C9CED6]">Your Links</h1>
+        <h1 className="text-2xl font-bold text-[#C9CED6] px-4 ">Your Links</h1>
       )}
 
       {/* ✨ 3. Existing responsive table/card container */}
@@ -23,7 +23,7 @@ const LinksTable = ({ links }: { links: linksDataType[] }) => {
             <p>Use the form above to get started!</p>
           </div>
         ) : isMobile ? (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 p-2">
             {links.map((link) => (
               <CardLink key={link.shortlink} link={link} />
             ))}

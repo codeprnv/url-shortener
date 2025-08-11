@@ -4,6 +4,9 @@ import getFavicons from '../utils/getFavicons';
 import ActiveLinkCopy from '../assets/active-link-copy.svg';
 import InactiveLinkCopy from '../assets/inactive-link-copy.svg';
 import type { linksDataType } from '../utils/linksData';
+import { format } from 'date-fns';
+import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
 // A simple Chevron Icon for the dropdown arrow
 const ChevronDownIcon = () => (
@@ -23,9 +26,24 @@ const ChevronDownIcon = () => (
   </svg>
 );
 
-const CardLink = ({ link }: {link: linksDataType}) => {
+const CardLink = ({ link }: { link: linksDataType }) => {
   // ✨ 1. State to manage the expanded/collapsed view for each card
   const [isExpanded, setIsExpanded] = React.useState(false);
+
+  const handleCopy = (e: React.MouseEvent<HTMLElement>) => {
+    try {
+      e.stopPropagation(); // Prevents the card from collapsing when copying
+      navigator.clipboard.writeText(link.shortlink);
+      toast.success('Copied to Clipboard', {
+        duration: 2500,
+      });
+    } catch (error) {
+      toast.error(`Cannot copy to clipboard: ${error}`, {
+        duration: 2500,
+      });
+      console.error(`Error in writing to clipboard!!: ${error}`);
+    }
+  };
 
   return (
     // ✨ 2. The main container keeps the styling, but we'll manage content inside
@@ -36,12 +54,13 @@ const CardLink = ({ link }: {link: linksDataType}) => {
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center gap-3">
-          <span className="font-light">{link.shortlink}</span>
+          <Link to={link.shortlink} className="font-light focus:text-[#144EE3]">
+            {`https://linkly.com/${link.shortlink.split('/')[3]}`}
+          </Link>
           <button
             className="z-10 cursor-pointer"
             onClick={(e) => {
-              e.stopPropagation(); // Prevents the card from collapsing when copying
-              navigator.clipboard.writeText(link.shortlink);
+              handleCopy(e);
             }}
           >
             <img src={CopyIcon} alt="copy-icon" />
@@ -62,30 +81,33 @@ const CardLink = ({ link }: {link: linksDataType}) => {
             <img
               src={getFavicons(link.originallink)}
               alt="favicon"
-              className="h-4 w-4 flex-shrink-0"
+              className="flex-shrink-0"
             />
             <span className="truncate">{link.originallink}</span>
           </div>
 
           {/* Details Row: QR, Clicks, Status, Date */}
           <div className="mt-2 flex items-center justify-between text-sm font-light">
-            <img
-              src={link.qrcode}
-              alt={link.qrcodedescription}
-              className="h-8 w-8"
-            />
-            <span className="text-xs">{link.clicks} clicks</span>
+            <Link
+              to={`/img?qr=${encodeURIComponent(link.qrcode)}`}
+              className="h-14 w-14"
+            >
+              <img src={link.qrcode} alt={link.qrcodedescription} />
+            </Link>
+            <span className="text-sm">{link.clicks} clicks</span>
             <div
-              className={`flex items-center gap-2 text-xs ${link.status ? 'text-[#1EB036]' : 'text-[#B0901E]'}`}
+              className={`flex items-center gap-2 text-sm ${link.status ? 'text-[#1EB036]' : 'text-[#B0901E]'}`}
             >
               <span>{link.status ? 'Active' : 'Inactive'}</span>
               <img
                 src={link.status ? ActiveLinkCopy : InactiveLinkCopy}
                 alt="status-icon"
-                className="h-4 w-4"
+                className="h-8 w-8"
               />
             </div>
-            <span className="text-xs">{link.date}</span>
+            <span className="text-sm">
+              {format(link.date, 'dd-MM-yyyy hh:mm aaaa')}
+            </span>
           </div>
         </div>
       )}

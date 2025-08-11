@@ -11,8 +11,6 @@ const LinkRow = ({ link }: { link: linksDataType }) => {
   const {
     shortlink,
     originallink,
-    qrcode,
-    qrcodedescription,
     clicks,
     status, // This is a boolean
     date,
@@ -59,7 +57,12 @@ const LinkRow = ({ link }: { link: linksDataType }) => {
       {/* QR Code */}
       <td className="px-6 py-5 text-sm font-light">
         <div className="flex justify-center">
-          <img src={qrcode} alt={qrcodedescription} className="h-14 w-14" />
+          <Link
+            to={`/img?qr=${encodeURIComponent(link.qrcode)}`}
+            className="h-14 w-14"
+          >
+            <img src={link.qrcode} alt={link.qrcodedescription} />
+          </Link>
         </div>
       </td>
 

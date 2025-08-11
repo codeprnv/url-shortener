@@ -2,6 +2,20 @@
 
 @layer base {
   body {
-    @apply h-full w-full min-w-[375px] overflow-x-hidden bg-[#0B101B] font-[Inter] overflow-y-auto;
+    @apply h-full w-full min-w-[375px] overflow-y-auto overflow-x-hidden bg-[#0B101B] font-[Inter] select-none;
+  }
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    @apply bg-[#181E29] text-[#C9CED6] outline outline-[#C9CED6];
+    -webkit-box-shadow: 0 0 0px 1000px #181e29 inset;
+    -webkit-text-fill-color: #c9ced6;
+    transition: background-color 5000s ease-in-out 0s;
   }
 }
