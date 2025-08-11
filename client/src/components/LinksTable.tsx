@@ -1,7 +1,7 @@
 import SelectionArrow from '../assets/Group 16.svg';
 import LinkRow from './LinkRow';
 // import linksData from '../utils/linksData.ts';
-import CardLink from './CardLink.tsx';
+import CardLink from './CardLink';
 import { useMediaQuery } from 'react-responsive';
 import type { linksDataType } from '../utils/linksData.ts';
 

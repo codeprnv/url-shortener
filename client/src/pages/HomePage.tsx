@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import Cubes from '../assets/Cubes.png';
 import Swirl from '../assets/Swirl.png';
-import Footer from '../components/Footer.tsx';
-import HeroSection from '../components/HeroSection.tsx';
-import LinksTable from '../components/LinksTable.tsx';
-import NavBar from '../components/NavBar.tsx';
+import Footer from '../components/Footer';
+import HeroSection from '../components/HeroSection';
+import LinksTable from '../components/LinksTable';
+import NavBar from '../components/NavBar';
 import { shortenUrlApi } from '../services/api.ts';
 import type { linksDataType } from '../utils/linksData.ts';
 const HomePage = () => {
