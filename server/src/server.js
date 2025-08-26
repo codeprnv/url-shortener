@@ -36,7 +36,11 @@ const startServer = async () => {
   app.use(express.json());
   app.use(
     cors({
-      origin: ['http://localhost:5173', 'https://url-shortener03.web.app/'],
+      origin: [
+        'http://localhost:5173',
+        'https://url-shortener03.web.app',
+        'https://url-shortener-cache.onrender.com',
+      ],
     })
   );
 
