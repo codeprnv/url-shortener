@@ -16,7 +16,7 @@ export const shortenUrlApi = async (
 ): Promise<linksDataType> => {
   try {
     const response = await axios.post<linksDataType>(
-      `${import.meta.env.VITE_APP_AWS_URL}${API_ENDPOINT}`,
+      `${import.meta.env.VITE_APP_RENDER_URL}${API_ENDPOINT}`,
       {
         originalUrl,
       }
