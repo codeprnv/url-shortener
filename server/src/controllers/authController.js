@@ -1,5 +1,6 @@
-import { User } from '../models/User.js';
 import jwt from 'jsonwebtoken';
+
+import { User } from '../models/User.js';
 
 // Function to generate a JWT
 const generateToken = (id) => {
@@ -11,25 +12,25 @@ const generateToken = (id) => {
 // @route POST /api/auth/register
 // @desc Register a new user
 export const registerUser = async (req, res) => {
-  const { username, password } = req.body;
+  const { password, username } = req.body;
 
   try {
     const userExists = await User.findOne({ username });
     if (userExists) {
       return res.status(400).json({ error: 'User already exists!!' });
     }
-    const user = await User.create({ username, password });
+    const user = await User.create({ password, username });
     if (user) {
       res.status(201).json({
         _id: user._id,
-        username: user.username,
         token: generateToken(user._id),
+        username: user.username,
       });
     } else {
       res.status(400).json({ error: 'Invalid user data!!' });
     }
   } catch (err) {
-    res.status(500).json({ error: 'Server error in registering the user!!' });
+    res.status(500).json({ error: `Server error in registering the user!!: ${err.message}` });
   }
 };
 
@@ -37,15 +38,15 @@ export const registerUser = async (req, res) => {
 // @desc Authenticate user & get token
 
 export const loginUser = async (req, res) => {
-  const { username, password } = req.body;
+  const { password, username } = req.body;
 
   try {
     const user = await User.findOne({ username });
     if (user && (await user.matchPassword(password))) {
       res.json({
         _id: user._id,
-        username: user.username,
         token: generateToken(user._id),
+        username: user.username,
       });
     } else {
       res.status(401).json({ error: 'Invalid username or password!!' });

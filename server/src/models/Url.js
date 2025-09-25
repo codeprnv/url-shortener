@@ -3,39 +3,39 @@ import mongoose from 'mongoose';
 // Schema for storing URL details
 
 const urlSchema = new mongoose.Schema({
-  originalUrl: {
-    type: String,
-    required: true,
-    trim: true,
-    match: /^(ftp|http|https):\/\/[^ "]+$/, // Basic URL Validation
-  },
-  shortCode: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    index: true, // Crucial for fast lookups during redirection
-  },
   clicks: {
-    type: Number,
-    required: true,
     default: 0,
+    required: true,
+    type: Number,
   },
   createdAt: {
-    type: Date,
     default: Date.now,
+    type: Date,
   },
-  status: {
-    type: Boolean,
-    default: true,
+  originalUrl: {
+    match: /^(ftp|http|https):\/\/[^ "]+$/, // Basic URL Validation
+    required: true,
+    trim: true,
+    type: String,
   },
   qrcode: {
-    type: String,
     required: true,
+    type: String,
   },
   qrcodedescription: {
-    type: String,
     required: true,
+    type: String,
+  },
+  shortCode: {
+    index: true, // Crucial for fast lookups during redirection
+    required: true,
+    trim: true,
+    type: String,
+    unique: true,
+  },
+  status: {
+    default: true,
+    type: Boolean,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -46,12 +46,12 @@ const urlSchema = new mongoose.Schema({
 
 const counterSchema = new mongoose.Schema({
   _id: {
-    type: String,
     required: true,
+    type: String,
   },
   seq: {
-    type: Number,
     default: 0,
+    type: Number,
   },
 });
 

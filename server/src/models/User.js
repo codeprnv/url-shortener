@@ -1,17 +1,17 @@
-import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: [true, 'Username is required'],
-  },
   password: {
-    type: String,
-    required: [true, 'Password is required'],
-    minlength: 6,
     match:
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+    minlength: 6,
+    required: [true, 'Password is required'],
+    type: String,
+  },
+  username: {
+    required: [true, 'Username is required'],
+    type: String,
   },
 });
 

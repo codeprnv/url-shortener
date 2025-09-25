@@ -1,16 +1,41 @@
 {
   "name": "url-shortener",
-  "private": true,
   "version": "1.0.0",
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "concurrently \"npm:frontend\" \"npm:backend\"",
-    "frontend": "npm --prefix client run dev",
-    "backend": "npm --prefix server run dev",
-    "format": "prettier --write ."
+    "format:check": "npx prettier -c .",
+    "format": "npx prettier -w .",
+    "client": "npm --prefix client run dev",
+    "server": "npm --prefix server run dev",
+    "dev": "concurrently \"npm:client\" \"npm:server\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint:client": "npx eslint client --fix",
+    "lint:server": "npx eslint server --fix",
+    "lint:app": "concurrently \"npm run lint:client\" \"npm run lint:server\""
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "concurrently": "^9.2.0",
+    "@eslint/js": "^9.33.0",
+    "@types/js-cookie": "^3.0.6",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-perfectionist": "^4.15.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
     "prettier": "^3.6.2",
-    "prettier-plugin-tailwindcss": "^0.6.14"
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.35.1"
+  },
+  "dependencies": {
+    "styled-components": "^6.1.19"
   }
 }

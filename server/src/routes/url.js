@@ -1,6 +1,7 @@
 // server\src\routes\url.js
 
 import { Router } from 'express';
+
 import { getUrlMetaData, shortenUrl } from '../controllers/urlController.js';
 import { protect } from '../middleware/authMiddleware.js';
 

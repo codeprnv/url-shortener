@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Cubes from '../assets/Cubes.png';
 import Swirl from '../assets/Swirl.png';
-import Footer from '../components/Footer';
+import Footer from '../components/common/Footer.tsx';
+import NavBar from '../components/common/NavBar.tsx';
 import HeroSection from '../components/HeroSection';
 import LinksTable from '../components/LinksTable';
-import NavBar from '../components/NavBar';
 import { shortenUrlApi } from '../services/api.ts';
 import type { linksDataType } from '../utils/linksData.ts';
 const HomePage = () => {
@@ -39,7 +39,7 @@ const HomePage = () => {
 
       // Save the updated list to localStorage for persistence
       localStorage.setItem('shortenedLinks', JSON.stringify(updatedLinks));
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -48,14 +48,14 @@ const HomePage = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col items-center justify-start mb-20">
-      <NavBar />
+    <div className='mb-20 flex min-h-screen w-full flex-col items-center justify-start'>
+      <NavBar isLogin={false} />
       {/* Background */}
-      <div className="pointer-events-none absolute top-0 z-[-1] flex h-screen w-screen items-center justify-center overflow-hidden">
-        <img src={Swirl} alt="swirl-background" />
+      <div className='pointer-events-none absolute top-0 z-[-1] flex h-screen w-screen items-center justify-center overflow-hidden'>
+        <img src={Swirl} alt='swirl-background' />
       </div>
-      <div className="pointer-events-none absolute top-0 z-[-1] flex h-screen w-screen items-center justify-center overflow-hidden">
-        <img src={Cubes} alt="cubes-background" />
+      <div className='pointer-events-none absolute top-0 z-[-1] flex h-screen w-screen items-center justify-center overflow-hidden'>
+        <img src={Cubes} alt='cubes-background' />
       </div>
       <HeroSection onShorten={handleShorten} loading={loading} error={error} />
       <LinksTable links={links} />

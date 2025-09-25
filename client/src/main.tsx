@@ -1,19 +1,26 @@
+import { ClerkProvider } from '@clerk/clerk-react';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { ErrorBoundary } from 'react-error-boundary';
+import fallback from './components/FallbackComponent';
+import { AuthProvider } from './context/AuthContext';
 import './index.css';
-import HomePage from './pages/HomePage.tsx';
-import { Toaster } from 'react-hot-toast';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import QrCode from './pages/QrCode.tsx';
+import AppRouter from './routes/Router';
+
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error('Missing Publishable Key!');
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/img" element={<QrCode />} />
-      </Routes>
-      <Toaster />
-    </Router>
+    <ErrorBoundary FallbackComponent={fallback}>
+      <AuthProvider>
+        <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+          <AppRouter />
+        </ClerkProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   </StrictMode>
 );

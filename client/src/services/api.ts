@@ -15,12 +15,17 @@ export const shortenUrlApi = async (
   originalUrl: string
 ): Promise<linksDataType> => {
   try {
-    const response = await axios.post<linksDataType>(
-      `${import.meta.env.VITE_APP_RENDER_URL}${API_ENDPOINT}`,
-      {
-        originalUrl,
-      }
-    );
+    if (import.meta.env.PROD) {
+      // This block runs only when you run `vite build`
+      URL = import.meta.env.VITE_RENDER_URL;
+    } else {
+      // This block runs when you run `vite` (dev server)
+      URL = import.meta.env.VITE_BASE_URL;
+    }
+
+    const response = await axios.post<linksDataType>(`${URL}${API_ENDPOINT}`, {
+      originalUrl,
+    });
     return response.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {

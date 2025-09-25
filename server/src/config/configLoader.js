@@ -1,4 +1,4 @@
-import { SSMClient, GetParametersByPathCommand } from '@aws-sdk/client-ssm';
+import { GetParametersByPathCommand, SSMClient } from '@aws-sdk/client-ssm';
 
 const ssmClient = new SSMClient({
   region: 'ap-south-1', //Mumbai region

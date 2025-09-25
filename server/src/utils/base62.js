@@ -39,4 +39,4 @@ function decode(str) {
   return decoded;
 }
 
-export { encode, decode };
+export { decode, encode };

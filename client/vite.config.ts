@@ -1,12 +1,21 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: './', // this makes assets load relatively
+  server: {
+    host: true,
+    allowedHosts: true,
+  },
+  base: '/', // this makes assets load relatively
   build: {
     outDir: 'dist',
+  },
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
   },
 });

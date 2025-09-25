@@ -1,6 +1,7 @@
 //  server\src\routes\redirect.js
 
 import { Router } from 'express';
+
 import { redirectUrl } from '../controllers/urlController.js';
 
 const router = Router();

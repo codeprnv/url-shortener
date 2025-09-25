@@ -1,10 +1,11 @@
 // server\src\controllers\urlController.js
 
-import { Url, Counter } from '../models/Url.js';
-import { encode } from '../utils/base62.js';
-import { URL } from 'url';
-import { redisClient } from '../config/redis.js';
 import qrcode from 'qrcode';
+import { URL } from 'url';
+
+import { redisClient } from '../config/redis.js';
+import { Counter, Url } from '../models/Url.js';
+import { encode } from '../utils/base62.js';
 
 /*
  * Gets the next unique sequence number from the Counter collection
@@ -37,13 +38,13 @@ export const shortenUrl = async (req, res) => {
     let url = await Url.findOne({ originalUrl });
     if (url) {
       return res.status(200).json({
-        shortlink: `${process.env.BASE_URL}/${url.shortCode}`,
+        clicks: url.clicks,
+        date: url.createdAt.toISOString(),
         originallink: url.originalUrl,
         qrcode: url.qrcode,
         qrcodedescription: url.qrcodedescription,
-        clicks: url.clicks,
+        shortlink: `${process.env.BASE_URL}/${url.shortCode}`,
         status: url.status,
-        date: url.createdAt.toISOString(),
       });
     }
 
@@ -57,9 +58,9 @@ export const shortenUrl = async (req, res) => {
 
     url = new Url({
       originalUrl,
-      shortCode,
       qrcode: qrCodeDataUrl,
       qrcodedescription: `QR Code for ${shortUrl}`,
+      shortCode,
     });
 
     await url.save();
@@ -72,13 +73,13 @@ export const shortenUrl = async (req, res) => {
     });
 
     return res.status(201).json({
-      shortlink: shortUrl,
+      clicks: url.clicks,
+      date: url.createdAt.toISOString(),
       originallink: url.originalUrl,
       qrcode: url.qrcode,
       qrcodedescription: url.qrcodedescription,
-      clicks: url.clicks,
+      shortlink: shortUrl,
       status: url.status,
-      date: url.createdAt.toISOString(),
     });
   } catch (err) {
     console.error('Server error: ', err);
@@ -97,13 +98,13 @@ export const getUrlMetaData = async (req, res) => {
     }
 
     const responseData = {
-      shortlink: `${process.env.BASE_URL}/${url.shortCode}`,
+      clicks: url.clicks,
+      date: url.createdAt.toISOString(),
       originallink: url.originalUrl,
       qrcode: url.qrcode,
       qrcodedescription: url.qrcodedescription,
-      clicks: url.clicks,
+      shortlink: `${process.env.BASE_URL}/${url.shortCode}`,
       status: url.status,
-      date: url.createdAt.toISOString(),
     };
 
     return res.status(200).json(responseData);
