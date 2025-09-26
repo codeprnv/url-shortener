@@ -17,18 +17,20 @@ const QrCode = lazy(() => import('../pages/QrCode.tsx'));
 const Signup = lazy(() => import('../pages/Signup.tsx'));
 const Error = lazy(() => import('../pages/ErrorPage.tsx'));
 
+const SSOCallback = lazy(() => import('../components/auth/SsoCallback.tsx'));
+
 export const ProtectedRoute = () => {
-  const { isSignedIn, isLoaded } = useUser();
+  const { isSignedIn, isLoaded, user } = useUser();
   if (!isLoaded) {
     return <Loader />;
   }
-  if (!isSignedIn) {
-    // Redirect to login or default path if no user
-    return <Navigate to={'/login'} replace />;
+  
+  // Render the nested routes if authenticated
+  if (isSignedIn && isLoaded && user) {
+    return <Outlet />;
   }
 
-  // Render the nested routes if authenticated
-  return <Outlet />;
+  return <Navigate to={'/login'} replace />;
 };
 
 const AppRouter = () => {
@@ -37,7 +39,7 @@ const AppRouter = () => {
       <Suspense
         fallback={
           <div className='flex h-screen w-screen items-center justify-center'>
-            <Loader size='12rem' />
+            <Loader size='7rem' />
           </div>
         }
       >
@@ -45,6 +47,8 @@ const AppRouter = () => {
           {/* Public Routes */}
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<Signup />} />
+
+          <Route path='/sso-callback' element={<SSOCallback />} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>

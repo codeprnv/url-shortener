@@ -3,7 +3,7 @@
 import { Router } from 'express';
 
 import { getUrlMetaData, shortenUrl } from '../controllers/urlController.js';
-import { protect } from '../middleware/authMiddleware.js';
+// import { protect } from '../middleware/authMiddleware.js';
 
 const router = Router();
 

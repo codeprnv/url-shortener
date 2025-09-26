@@ -1,11 +1,11 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
   body {
-    @apply h-full w-full min-w-[375px] overflow-y-auto overflow-x-hidden bg-[#0B101B] font-[Inter] select-none;
+    @apply h-full w-full min-w-[375px] select-none overflow-y-auto overflow-x-hidden bg-[#0B101B] font-[Inter];
   }
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
@@ -16,8 +16,8 @@
   select:-webkit-autofill,
   select:-webkit-autofill:hover,
   select:-webkit-autofill:focus {
-    @apply  text-white outline outline-[#1B3582] ;
-    -webkit-box-shadow: 0 0 0px 1000px #0D1226 inset !important;
+    @apply text-white outline outline-[#1B3582];
+    -webkit-box-shadow: 0 0 0px 1000px #0d1226 inset !important;
     -webkit-text-fill-color: #c9ced6 !important;
     transition: background-color 5000s ease-in-out 0s;
   }

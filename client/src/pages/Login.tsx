@@ -1,4 +1,5 @@
 import { useSignIn, useSignUp } from '@clerk/clerk-react';
+import Cookies from 'js-cookie';
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -65,9 +66,10 @@ const Login = () => {
 
   const handleSocialSignIn = (strategy: 'oauth_google' | 'oauth_github') => {
     if (!signUpLoaded) return;
+    Cookies.remove('__client_uat'); 
     signUp.authenticateWithRedirect({
       strategy,
-      redirectUrl: '/',
+      redirectUrl: '/sso-callback',
       redirectUrlComplete: '/',
     });
   };
@@ -76,7 +78,7 @@ const Login = () => {
 
   return (
     <div className='flex h-screen w-screen min-w-[#375px] flex-col items-center'>
-      <NavBar isLogin={true} />
+      <NavBar />
       <img
         src={loginBg}
         alt='login-bg'

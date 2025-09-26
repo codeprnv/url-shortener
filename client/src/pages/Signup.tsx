@@ -5,6 +5,7 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 import { useSignUp } from '@clerk/clerk-react';
+import Cookies from 'js-cookie';
 import type { FormEvent } from 'react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -94,16 +95,17 @@ const Signup = () => {
 
   const handleSocialSignUp = (strategy: 'oauth_google' | 'oauth_github') => {
     if (!isLoaded) return;
+    Cookies.remove('__client_uat'); 
     signUp.authenticateWithRedirect({
       strategy,
-      redirectUrl: '/',
+      redirectUrl: '/sso-callback',
       redirectUrlComplete: '/',
     });
   };
 
   return (
     <div className='flex h-screen w-screen min-w-[#375px] flex-col items-center'>
-      <NavBar isLogin={false} />
+      <NavBar />
       <img
         src={signupBg}
         alt='signup-bg'

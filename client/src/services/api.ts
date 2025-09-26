@@ -15,20 +15,25 @@ export const shortenUrlApi = async (
   originalUrl: string
 ): Promise<linksDataType> => {
   try {
+    let URL = '';
     if (import.meta.env.PROD) {
       // This block runs only when you run `vite build`
       URL = import.meta.env.VITE_RENDER_URL;
+      console.warn('Using production url: \n', URL)
     } else {
       // This block runs when you run `vite` (dev server)
       URL = import.meta.env.VITE_BASE_URL;
+      console.warn('Using development url: \n', URL);
     }
-
     const response = await axios.post<linksDataType>(`${URL}${API_ENDPOINT}`, {
-      originalUrl,
-    });
+      originalUrl
+    })
+    console.log(`Shorten Url Response: `)
+    console.table(response.data)
     return response.data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
+    console.error(`Error Occured: ${error}`)
     const errorMessage =
       error.response?.data?.error || 'An unexpected error occured!!';
     throw new Error(errorMessage);

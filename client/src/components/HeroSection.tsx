@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import Arrow_Right from '../assets/arrow-right.svg';
 import Link_Icon from '../assets/link.svg';
@@ -14,6 +14,8 @@ interface HeroSectionProps {
 const HeroSection = ({ onShorten, loading, error }: HeroSectionProps) => {
   const isMobile = useMediaQuery({ maxWidth: 480 });
   const [url, setUrl] = useState<string>('');
+  const [isClipboardToggled, setIsClipboardToggled] = useState<boolean>(false);
+  const [clipboardText, setClipboardText] = useState<string>('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,6 +25,25 @@ const HeroSection = ({ onShorten, loading, error }: HeroSectionProps) => {
     onShorten(url);
     setUrl('');
   };
+
+  useEffect(() => {
+    // Only run the logic if the toggle is true
+    if (isClipboardToggled) {
+      const readClipboard = async () => {
+        try {
+          const text = await navigator.clipboard.readText();
+          console.log('Clipboard text:', text); // Will now log only once
+          setClipboardText(text);
+          setUrl(text); // Also update the main URL state
+        } catch (err) {
+          console.error('Failed to read the clipboard contents: ', err);
+        } 
+      };
+
+      readClipboard();
+    }
+  }, [isClipboardToggled]);
+
   return (
     <div className='flex h-full min-w-full flex-col items-center justify-center lg:min-w-[35vw]'>
       <div className='flex h-full max-w-[90vw] flex-col items-center justify-center gap-5 p-4'>
@@ -55,14 +76,14 @@ const HeroSection = ({ onShorten, loading, error }: HeroSectionProps) => {
               id='link-text'
               className='duration-250 block w-full rounded-3xl bg-[#181E29] px-6 py-5 ps-12 text-sm text-[#C9CED6] outline transition-colors focus:outline-[#144EE3]'
               placeholder='Enter the link here'
-              value={url}
+              value={isClipboardToggled ? clipboardText : url}
               onChange={(e) => setUrl(e.target.value)}
               disabled={loading}
               required
             />
             <button
               type='submit'
-              className='duration-250 absolute bottom-2.5 end-1.5 cursor-pointer rounded-full bg-[#144EE3] px-4 py-3 text-base font-semibold text-white outline-2 outline-[#144EE3] drop-shadow-lg transition-colors hover:bg-[#0516b4] hover:outline-[#0516b4] sm:bottom-1.5 md:rounded-3xl'
+              className='duration-250 absolute bottom-2.5 end-1.5 min-h-[2.5rem] max-w-fit cursor-pointer rounded-full bg-[#144EE3] px-2 text-base font-semibold text-white outline-2 outline-[#144EE3] drop-shadow-lg transition-colors hover:bg-[#0516b4] hover:outline-[#0516b4] sm:bottom-1.5 md:min-h-[3rem] md:rounded-3xl'
               disabled={loading}
             >
               {loading ? (
@@ -85,7 +106,13 @@ const HeroSection = ({ onShorten, loading, error }: HeroSectionProps) => {
         {/* Toggle Btn Start */}
         <div className='flex h-fit w-full items-center justify-center gap-5 p-2'>
           <label className='mb-5 inline-flex cursor-pointer items-center'>
-            <input type='checkbox' value='' className='peer sr-only' />
+            <input
+              type='checkbox'
+              checked={isClipboardToggled}
+              value=''
+              className='peer sr-only'
+              onClick={() => setIsClipboardToggled((prev) => !prev)}
+            />
             <div className="peer relative h-5 w-9 rounded-full bg-[#181E29] after:absolute after:start-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-[#144EE3] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#353C4A] rtl:peer-checked:after:-translate-x-full dark:border-[#353C4A]"></div>
             <span className='ms-3 text-sm font-light text-[#C9CED6]'>
               Auto Paste from Clipboard

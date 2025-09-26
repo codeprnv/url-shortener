@@ -39,11 +39,11 @@ const StyledWrapper = styled.div`
     align-items: center;
     justify-content: center;
     position: relative;
-    width: 12px;
-    height: 12px;
+    width: 4px;
+    height: 4px;
     border: solid 2px var(--color);
     border-radius: 50%;
-    margin: 0 6px;
+    margin: 0 5px;
     background-color: transparent;
     animation: circle-keys var(--animation);
   }
@@ -61,8 +61,8 @@ const StyledWrapper = styled.div`
   .loader .circle .outline {
     position: absolute;
     transform: translate(-50%, -50%);
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     animation: outline-keys var(--animation);
   }

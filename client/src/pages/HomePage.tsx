@@ -1,3 +1,4 @@
+// import DataTableWithColumnFilterDemo from '@/components/Shadcn/data-table/data-table-04.tsx';
 import { useEffect, useState } from 'react';
 import Cubes from '../assets/Cubes.png';
 import Swirl from '../assets/Swirl.png';
@@ -49,7 +50,7 @@ const HomePage = () => {
 
   return (
     <div className='mb-20 flex min-h-screen w-full flex-col items-center justify-start'>
-      <NavBar isLogin={false} />
+      <NavBar/>
       {/* Background */}
       <div className='pointer-events-none absolute top-0 z-[-1] flex h-screen w-screen items-center justify-center overflow-hidden'>
         <img src={Swirl} alt='swirl-background' />
@@ -59,6 +60,7 @@ const HomePage = () => {
       </div>
       <HeroSection onShorten={handleShorten} loading={loading} error={error} />
       <LinksTable links={links} />
+      {/* <DataTableWithColumnFilterDemo/> */}
       <Footer />
     </div>
   );
