@@ -41,6 +41,7 @@ const startServer = async () => {
         'http://localhost:5173',
         'https://url-shortener03.web.app',
         'https://url-shortener-cache.onrender.com',
+        'https://linkly-03.vercel.app'
       ],
     })
   );
