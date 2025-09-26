@@ -39,6 +39,8 @@ const startServer = async () => {
     cors({
       origin: [
         'http://localhost:5173',
+        'http://localhost:4173',
+        'https://url-shortener03.firebaseapp.com',
         'https://url-shortener03.web.app',
         'https://url-shortener-cache.onrender.com',
         'https://linkly-03.vercel.app'
