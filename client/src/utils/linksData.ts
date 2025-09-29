@@ -1,4 +1,5 @@
 export interface linksDataType {
+  _id: string;
   shortlink: string;
   originallink: string;
   qrcode: string;

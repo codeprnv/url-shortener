@@ -1,17 +1,20 @@
-// import DataTableWithColumnFilterDemo from '@/components/Shadcn/data-table/data-table-04.tsx';
+import { LinksTable } from '@/components/links/LinksTable.tsx';
 import { useEffect, useState } from 'react';
 import Cubes from '../assets/Cubes.png';
 import Swirl from '../assets/Swirl.png';
 import Footer from '../components/common/Footer.tsx';
 import NavBar from '../components/common/NavBar.tsx';
 import HeroSection from '../components/HeroSection';
-import LinksTable from '../components/LinksTable';
+// import LinksTable from '../components/LinksTable';
+import { Columns } from '@/components/links/Columns.tsx';
 import { shortenUrlApi } from '../services/api.ts';
 import type { linksDataType } from '../utils/linksData.ts';
 const HomePage = () => {
   const [links, setLinks] = useState<linksDataType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  
 
   useEffect(() => {
     try {
@@ -24,6 +27,12 @@ const HomePage = () => {
       localStorage.removeItem('shortenedLinks');
     }
   }, []);
+
+  useEffect(() => {
+    if (links.length !== 0) {
+      console.log('Links: ', links);
+    }
+  }, [links]);
 
   // This is the core logic function that will be passed to the HeroSection
   const handleShorten = async (longUrl: string) => {
@@ -50,7 +59,7 @@ const HomePage = () => {
 
   return (
     <div className='mb-20 flex min-h-screen w-full flex-col items-center justify-start'>
-      <NavBar/>
+      <NavBar />
       {/* Background */}
       <div className='pointer-events-none absolute top-0 z-[-1] flex h-screen w-screen items-center justify-center overflow-hidden'>
         <img src={Swirl} alt='swirl-background' />
@@ -59,8 +68,7 @@ const HomePage = () => {
         <img src={Cubes} alt='cubes-background' />
       </div>
       <HeroSection onShorten={handleShorten} loading={loading} error={error} />
-      <LinksTable links={links} />
-      {/* <DataTableWithColumnFilterDemo/> */}
+      <LinksTable columns={Columns} data={links} />
       <Footer />
     </div>
   );
