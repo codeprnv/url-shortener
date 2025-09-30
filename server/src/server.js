@@ -7,14 +7,15 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // --- Now that process.env is populated, import all other modules ---
+import { requireAuth } from '@clerk/express';
 import cors from 'cors';
 import express from 'express';
 
 import { loadConfig as loadAWSConfig } from './config/configLoader.js';
 import connectDB from './config/db.js';
 import { connectRedis } from './config/redis.js';
-import authRoutes from './routes/auth.js';
-import redirectRoutes from './routes/redirect.js';
+import { redirectUrl } from './controllers/urlController.js';
+import { syncUser } from './middleware/authMiddleware.js';
 import urlRoutes from './routes/url.js';
 
 const startServer = async () => {
@@ -37,13 +38,14 @@ const startServer = async () => {
   app.use(express.json());
   app.use(
     cors({
+      credentials: true,
       origin: [
         'http://localhost:5173',
         'http://localhost:4173',
         'https://url-shortener03.firebaseapp.com',
         'https://url-shortener03.web.app',
         'https://url-shortener-cache.onrender.com',
-        'https://linkly-03.vercel.app'
+        'https://linkly-03.vercel.app',
       ],
     })
   );
@@ -52,9 +54,12 @@ const startServer = async () => {
   app.get('/health', (req, res) => {
     res.status(200).send({ message: 'API is running', status: 'ok' });
   });
-  app.use('/api/auth', authRoutes);
-  app.use('/api/v1', urlRoutes);
-  app.use('/', redirectRoutes);
+
+  // Public route
+  app.get('/:shortCode', redirectUrl);
+
+  // Protected route
+  app.use('/api/v1/url', requireAuth(), syncUser, urlRoutes);
 
   app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);

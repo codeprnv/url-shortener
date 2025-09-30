@@ -2,20 +2,20 @@
 
 import { Router } from 'express';
 
-import { getUrlMetaData, shortenUrl } from '../controllers/urlController.js';
-// import { protect } from '../middleware/authMiddleware.js';
+import {
+  deleteUrl,
+  getAllUrls,
+  getUrlMetaData,
+  shortenUrl,
+} from '../controllers/urlController.js';
 
 const router = Router();
 
-/* // @route POST /api/v1/url
-// @desc Create a short URL
-router.post('/url', protect, shortenUrl);
+router.route('/').post(shortenUrl).get(getAllUrls);
 
-// @route GET /api/v1/url/meta/:shortCode
-// @desc Returns url metadata
-router.get('/url/meta/:shortCode', protect, getUrlMetaData); */
+// Handle delete requests
+router.route('/:id').delete(deleteUrl);
 
-router.post('/url', shortenUrl);
-router.get('/url/meta/:shortCode', getUrlMetaData);
+router.get('/meta/:shortId', getUrlMetaData);
 
 export default router;
