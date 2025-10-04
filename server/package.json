@@ -9,8 +9,7 @@
     "test": "jest --detectOpenHandles",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"**/*.{js,json,md}\"",
-    "prepare": "husky"
+    "format": "prettier --write \"**/*.{js,json,md}\""
   },
   "lint-staged": {
     "*.js": [
