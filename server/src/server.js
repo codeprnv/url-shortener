@@ -1,17 +1,14 @@
 // server/src/server.js
 
 import dotenv from 'dotenv';
-// --- FIX: Load .env variables first. This is safe for production ---
-// This runs immediately and populates process.env from your .env file.
-// In production, where there is no .env file, it does nothing, which is fine.
+
 dotenv.config();
 
-// --- Now that process.env is populated, import all other modules ---
 import { requireAuth } from '@clerk/express';
 import cors from 'cors';
 import express from 'express';
 
-import { loadConfig as loadAWSConfig } from './config/configLoader.js';
+// import { loadConfig as loadAWSConfig } from './config/configLoader.js';
 import connectDB from './config/db.js';
 import { connectRedis } from './config/redis.js';
 import { redirectUrl } from './controllers/urlController.js';
@@ -22,12 +19,12 @@ const startServer = async () => {
   // In a production environment, load secrets from AWS.
   // This will securely overwrite any values needed for production.
   if (process.env.NODE_ENV === 'production') {
-    await loadAWSConfig();
+    console.log('Running in production environment');
+    // await loadAWSConfig();
   } else {
-    console.log('Running in development mode.');
+    console.log('Running in development environment');
   }
 
-  // Connect to services using the final, correct configuration.
   await connectDB();
   await connectRedis();
 
