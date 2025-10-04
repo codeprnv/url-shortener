@@ -18,7 +18,7 @@ export const syncUser = async (req, res, next) => {
   try {
     const clerkUser = await clerkClient.users.getUser(auth.userId);
 
-    console.log('Clerk User: ', clerkUser);
+    // console.log('Clerk User: ', clerkUser);
 
     if (!clerkUser) {
       return res.status(404).json({ error: 'User not found in Clerk!!' });

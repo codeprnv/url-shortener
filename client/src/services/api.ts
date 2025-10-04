@@ -6,7 +6,7 @@ const API_ENDPOINT = '/api/v1/url';
 
 // Create global axios instance
 const api = axios.create({
-  baseURL: import.meta.env.PROD
+  baseURL: import.meta.env.PROD===false
     ? import.meta.env.VITE_RENDER_URL
     : import.meta.env.VITE_BASE_URL,
 });

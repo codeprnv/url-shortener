@@ -3,7 +3,7 @@ import { useMediaQuery } from 'react-responsive';
 import Arrow_Right from '../assets/arrow-right.svg';
 import Link_Icon from '../assets/link.svg';
 import Question_Icon from '../assets/question-circle.svg';
-import UrlLoader from './common/UrlLoader';
+import UrlSpinner from './common/UrlSpinner';
 
 interface HeroSectionProps {
   onShorten: (url: string) => Promise<void>; // It's an async function that takes a string and returns nothing
@@ -37,7 +37,7 @@ const HeroSection = ({ onShorten, loading, error }: HeroSectionProps) => {
           setUrl(text); // Also update the main URL state
         } catch (err) {
           console.error('Failed to read the clipboard contents: ', err);
-        } 
+        }
       };
 
       readClipboard();
@@ -87,7 +87,7 @@ const HeroSection = ({ onShorten, loading, error }: HeroSectionProps) => {
               disabled={loading}
             >
               {loading ? (
-                <UrlLoader />
+                <UrlSpinner />
               ) : isMobile ? (
                 <img src={Arrow_Right} alt='Right Arrow' />
               ) : (

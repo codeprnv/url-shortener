@@ -10,6 +10,7 @@ export function useLinks() {
     fetcher,
     {
       revalidateOnFocus: true,
+      dedupingInterval: 7000,
     }
   );
 

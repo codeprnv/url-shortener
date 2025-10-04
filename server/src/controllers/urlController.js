@@ -53,7 +53,10 @@ export const shortenUrl = async (req, res) => {
     //  --- Create New Short URL
     const urlId = await getNextSequence();
     const shortCode = encode(urlId);
-    const shortUrl = `${process.env.BASE_URL}/${shortCode}`;
+    const shortUrl =
+      process.env.NODE_ENV === 'production'
+        ? `${process.env.RENDER_URL}/${shortCode}`
+        : `${process.env.BASE_URL}/${shortCode}`;
 
     // --- Generate QR Code ---
     const qrCodeDataUrl = await qrcode.toDataURL(shortUrl);

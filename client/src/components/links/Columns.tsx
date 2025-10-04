@@ -9,6 +9,7 @@ import { Button } from '../ui/button';
 import getFavicons from '@/utils/getFavicons';
 import type { linksDataType } from '@/utils/linksData';
 import { formatDate } from 'date-fns';
+import { Link } from 'react-router-dom';
 
 const handleCopy = async (text: string, type: string) => {
   await navigator.clipboard.writeText(text);
@@ -79,7 +80,9 @@ export const Columns: ColumnDef<linksDataType>[] = [
     accessorKey: 'qrcode',
     header: 'QR Code',
     cell: ({ row }) => (
-      <img src={row.getValue('qrcode')} alt='QR Code' className='w-18 h-18' />
+      <Link to={`/img?qr=${encodeURIComponent(row.getValue('qrcode'))}`}>
+        <img src={row.getValue('qrcode')} alt='QR Code' className='w-18 h-18' />
+      </Link>
     ),
   },
   //   Clicks

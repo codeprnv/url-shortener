@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const UrlLoader = () => {
+const UrlSpinner = () => {
   return (
     <StyledWrapper>
       <div className='loader'>
@@ -167,4 +167,4 @@ const StyledWrapper = styled.div`
   }
 `;
 
-export default UrlLoader;
+export default UrlSpinner;
