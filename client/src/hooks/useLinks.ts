@@ -2,12 +2,12 @@ import { getAllLinksApi, shortenUrlApi } from '@/services/api';
 import type { linksDataType } from '@/utils/linksData';
 import useSWR from 'swr';
 
-const fetcher = () => getAllLinksApi();
+// const fetcher = () => getAllLinksApi();
 
 export function useLinks() {
   const { data, error, isLoading, mutate } = useSWR<linksDataType[]>(
     '/api/v1/url',
-    fetcher,
+    getAllLinksApi,
     {
       revalidateOnFocus: true,
       dedupingInterval: 7000,

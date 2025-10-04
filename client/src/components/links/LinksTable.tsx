@@ -92,7 +92,7 @@ export function LinksTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  className='border-2 shadow-lg hover:bg-transparent'
+                  className='border-2 shadow-lg hover:bg-[#014265]'
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell

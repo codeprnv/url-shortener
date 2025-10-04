@@ -7,6 +7,14 @@ import { redisClient } from '../config/redis.js';
 import { Counter, Url } from '../models/Url.js';
 import { encode } from '../utils/base62.js';
 
+const getBaseUrl = () => {
+  return process.env.NODE_ENV === 'production'
+    ? process.env.RENDER_URL
+    : process.env.BASE_URL;
+};
+
+
+
 /*
  * Gets the next unique sequence number from the Counter collection
  * This is an atomic operation to prevent race conditions.
@@ -39,13 +47,14 @@ export const shortenUrl = async (req, res) => {
     // --- Check if the URL already exists to prevent duplicates ---
     let url = await Url.findOne({ originalUrl, user: userId });
     if (url) {
+      const baseUrl = getBaseUrl();
       return res.status(200).json({
         clicks: url.clicks,
         date: url.createdAt.toISOString(),
         originallink: url.originalUrl,
         qrcode: url.qrcode,
         qrcodedescription: url.qrcodedescription,
-        shortlink: `${process.env.BASE_URL}/${url.shortId}`,
+        shortlink: `${baseUrl}/${url.shortCode}`,
         status: url.status,
       });
     }
@@ -53,10 +62,8 @@ export const shortenUrl = async (req, res) => {
     //  --- Create New Short URL
     const urlId = await getNextSequence();
     const shortCode = encode(urlId);
-    const shortUrl =
-      process.env.NODE_ENV === 'production'
-        ? `${process.env.RENDER_URL}/${shortCode}`
-        : `${process.env.BASE_URL}/${shortCode}`;
+    const baseUrl = getBaseUrl();
+    const shortUrl = `${baseUrl}/${shortCode}`;
 
     // --- Generate QR Code ---
     const qrCodeDataUrl = await qrcode.toDataURL(shortUrl);
@@ -96,6 +103,7 @@ export const shortenUrl = async (req, res) => {
 // --- Function to return URLMETADATA ---
 export const getUrlMetaData = async (req, res) => {
   try {
+    const baseUrl = getBaseUrl()
     const { shortId } = req.params;
     const userId = req.user._id; //Get the MongoDB User ID from the middleware
 
@@ -111,7 +119,7 @@ export const getUrlMetaData = async (req, res) => {
       originallink: url.originalUrl,
       qrcode: url.qrcode,
       qrcodedescription: url.qrcodedescription,
-      shortlink: `${process.env.BASE_URL}/${url.shortId}`,
+      shortlink: `${baseUrl}/${url.shortCode}`,
       status: url.status,
     };
 
@@ -167,6 +175,7 @@ export const redirectUrl = async (req, res) => {
 
 export const getAllUrls = async (req, res) => {
   try {
+    const baseUrl = getBaseUrl()
     const userId = req.user._id;
 
     const urls = await Url.find({ user: userId }).sort({ createdAt: -1 });
@@ -177,7 +186,7 @@ export const getAllUrls = async (req, res) => {
       date: url.createdAt.toISOString(),
       originallink: url.originalUrl,
       qrcode: url.qrcode,
-      shortlink: `${process.env.BASE_URL}/${url.shortCode}`,
+      shortlink: `${baseUrl}/${url.shortCode}`,
       status: url.status,
     }));
 
