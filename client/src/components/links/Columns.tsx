@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Copy, MoreHorizontal, Trash2, Eye, EyeOff } from 'lucide-react';
+import { ArrowUpDown, Copy, MoveHorizontal as MoreHorizontal, Trash2, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 import { Badge } from '../ui/badge';
