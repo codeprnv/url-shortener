@@ -1,11 +1,19 @@
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Copy } from 'lucide-react';
+import { ArrowUpDown, Copy, MoreHorizontal, Trash2, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
 
-// Define the shape of the link data
 import getFavicons from '@/utils/getFavicons';
 import type { linksDataType } from '@/utils/linksData';
 import { formatDate } from 'date-fns';
@@ -19,7 +27,28 @@ const handleCopy = async (text: string, type: string) => {
 };
 
 export const Columns: ColumnDef<linksDataType>[] = [
-  // Short Link
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label='Select all'
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label='Select row'
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: 'shortlink',
     header: 'Short Link',
@@ -121,7 +150,6 @@ export const Columns: ColumnDef<linksDataType>[] = [
       );
     },
   },
-  // Date
   {
     accessorKey: 'date',
     header: ({ column }) => (
@@ -130,13 +158,65 @@ export const Columns: ColumnDef<linksDataType>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
       >
         Date
-        <ArrowUpDown className='h-4 w-4' />
-        <p className='text-[11px]'>{column.getIsSorted()}</p>
+        <ArrowUpDown className='ml-2 h-4 w-4' />
       </Button>
     ),
     cell: ({ row }) => {
       const date = new Date(row.getValue('date'));
       return <div>{formatDate(date, 'dd-MM-yy hh:mm aa')}</div>;
+    },
+  },
+  {
+    id: 'actions',
+    enableHiding: false,
+    cell: ({ row }) => {
+      const link = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant='ghost' className='h-8 w-8 p-0'>
+              <span className='sr-only'>Open menu</span>
+              <MoreHorizontal className='h-4 w-4' />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end' className='bg-gray-900 text-white border-gray-700'>
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => handleCopy(link.shortlink, 'Short link')}
+              className='cursor-pointer hover:bg-gray-800'
+            >
+              <Copy className='mr-2 h-4 w-4' />
+              Copy short link
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleCopy(link.originallink, 'Original link')}
+              className='cursor-pointer hover:bg-gray-800'
+            >
+              <Copy className='mr-2 h-4 w-4' />
+              Copy original link
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className='bg-gray-700' />
+            <DropdownMenuItem className='cursor-pointer hover:bg-gray-800'>
+              {link.status ? (
+                <>
+                  <EyeOff className='mr-2 h-4 w-4' />
+                  Deactivate
+                </>
+              ) : (
+                <>
+                  <Eye className='mr-2 h-4 w-4' />
+                  Activate
+                </>
+              )}
+            </DropdownMenuItem>
+            <DropdownMenuItem className='cursor-pointer text-red-400 hover:bg-gray-800 hover:text-red-300'>
+              <Trash2 className='mr-2 h-4 w-4' />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
     },
   },
 ];
