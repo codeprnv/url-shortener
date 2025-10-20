@@ -1,18 +1,19 @@
-import { LinksTable } from '@/components/links/LinksTable.tsx';
+import { Columns } from '@/components/links/Columns.tsx';
+import { DataTable } from '@/components/links/DataTable.tsx';
 import { useLinks } from '@/hooks/useLinks.ts';
+import type { linksDataType } from '@/utils/linksData.ts';
+import { useUser } from '@clerk/clerk-react';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import Cubes from '../assets/Cubes.png';
 import Swirl from '../assets/Swirl.png';
 import Footer from '../components/common/Footer.tsx';
 import NavBar from '../components/common/NavBar.tsx';
 import HeroSection from '../components/HeroSection';
-// import LinksTable from '../components/LinksTable';
-import { Columns } from '@/components/links/Columns.tsx';
-import { useUser } from '@clerk/clerk-react';
 
 const HomePage = () => {
   const { isSignedIn } = useUser();
-  const { links, error, isLoading, addLink } = useLinks();
+  const { links, error, isLoading, addLink, deleteLinks } = useLinks();
 
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -34,6 +35,20 @@ const HomePage = () => {
     }
   };
 
+  const handleDelete = async (linkToDelete: linksDataType) => {
+    try {
+      await deleteLinks([linkToDelete]); // Pass the link object in an array
+      toast.success(`Link deleted successfully!`, { duration: 5000 });
+    } catch (error) {
+      toast.error(`An error occurred while deleting the link.`, {
+        duration: 5000,
+      });
+      console.error(`Deletion failed:`, error);
+    }
+  };
+
+  const columns = Columns({ handleDelete });
+
   return (
     <div className='mb-20 flex min-h-screen w-full flex-col items-center justify-start'>
       <NavBar />
@@ -48,6 +63,7 @@ const HomePage = () => {
         onShorten={handleShorten}
         loading={isLoading}
         error={formError}
+        isSignedIn={isSignedIn}
       />
       {isSignedIn && (
         <div className='relative top-10 h-full w-full max-w-[90vw]'>
@@ -59,7 +75,7 @@ const HomePage = () => {
               Error loading links: {error.message}
             </p>
           )}
-          {links && <LinksTable columns={Columns} data={links} />}
+          {links && <DataTable columns={columns} data={links} />}
         </div>
       )}
       <Footer />

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useMediaQuery } from 'react-responsive';
 import Arrow_Right from '../assets/arrow-right.svg';
 import Link_Icon from '../assets/link.svg';
@@ -9,9 +10,15 @@ interface HeroSectionProps {
   onShorten: (url: string) => Promise<void>; // It's an async function that takes a string and returns nothing
   loading: boolean;
   error: string | null;
+  isSignedIn: boolean | undefined;
 }
 
-const HeroSection = ({ onShorten, loading, error }: HeroSectionProps) => {
+const HeroSection = ({
+  onShorten,
+  loading,
+  error,
+  isSignedIn,
+}: HeroSectionProps) => {
   const isMobile = useMediaQuery({ maxWidth: 480 });
   const [url, setUrl] = useState<string>('');
   const [isClipboardToggled, setIsClipboardToggled] = useState<boolean>(false);
@@ -31,11 +38,18 @@ const HeroSection = ({ onShorten, loading, error }: HeroSectionProps) => {
     if (isClipboardToggled) {
       const readClipboard = async () => {
         try {
-          const text = await navigator.clipboard.readText();
-          console.log('Clipboard text:', text); // Will now log only once
-          setClipboardText(text);
-          setUrl(text); // Also update the main URL state
+          const url = await navigator.clipboard.readText();
+          if (new URL(url)) {
+            setClipboardText(url);
+            setUrl(url);
+          }
+          
         } catch (err) {
+          setClipboardText('');
+          setUrl('');
+          toast.error('No URL found in clipboard', {
+            duration: 5000,
+          });
           console.error('Failed to read the clipboard contents: ', err);
         }
       };
@@ -120,25 +134,27 @@ const HeroSection = ({ onShorten, loading, error }: HeroSectionProps) => {
           </label>
         </div>
         {/* Toggle Btn End */}
-        <div className='flex min-w-full flex-wrap items-center justify-center gap-2 text-center text-sm font-medium text-[#C9CED6]'>
-          <span>
-            You can create <span className='text-[#EB568E]'>05</span> more
-            links.{' '}
-            <button className='cursor-pointer underline hover:text-[#144EE3]'>
-              Register Now
-            </button>{' '}
-            to enjoy Unlimited usage
-          </span>
-          <button className='cursor-pointer'>
-            {!isMobile && (
-              <img
-                src={Question_Icon}
-                alt='question-circle-icon'
-                className='h-4 w-4 align-middle'
-              />
-            )}
-          </button>
-        </div>
+        {!isSignedIn && (
+          <div className='flex min-w-full flex-wrap items-center justify-center gap-2 text-center text-sm font-medium text-[#C9CED6]'>
+            <span>
+              You can create <span className='text-[#EB568E]'>05</span> more
+              links.{' '}
+              <button className='cursor-pointer underline hover:text-[#144EE3]'>
+                Register Now
+              </button>{' '}
+              to enjoy Unlimited usage
+            </span>
+            <button className='cursor-pointer'>
+              {!isMobile && (
+                <img
+                  src={Question_Icon}
+                  alt='question-circle-icon'
+                  className='h-4 w-4 align-middle'
+                />
+              )}
+            </button>
+          </div>
+        )}
       </div>
       {/* Additional Content End */}
     </div>

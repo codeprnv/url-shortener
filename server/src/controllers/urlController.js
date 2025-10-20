@@ -202,7 +202,7 @@ export const deleteUrl = async (req, res) => {
     const userId = req.user._id;
     const { id } = req.params;
 
-    const url = await Url.findOneAndDelete({ _id: id, user: userId });
+    const url = await Url.findOneAndDelete({shortCode: id, user: userId });
 
     if (!url) {
       return res.status(404).json({

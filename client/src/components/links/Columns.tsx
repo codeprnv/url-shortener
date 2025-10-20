@@ -1,15 +1,28 @@
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Copy } from 'lucide-react';
+import { ArrowUpDown, Copy, Ellipsis, Eye, EyeOff, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
 
-// Define the shape of the link data
+import formatLinks from '@/utils/formatLinks';
 import getFavicons from '@/utils/getFavicons';
 import type { linksDataType } from '@/utils/linksData';
 import { formatDate } from 'date-fns';
-import { Link } from 'react-router-dom';
+import QrcodeModal from '../Shadcn/QR/Qrcode-Modal';
+
+interface ColumnsProps {
+  handleDelete: (link: linksDataType) => void;
+}
 
 const handleCopy = async (text: string, type: string) => {
   await navigator.clipboard.writeText(text);
@@ -18,8 +31,31 @@ const handleCopy = async (text: string, type: string) => {
   });
 };
 
-export const Columns: ColumnDef<linksDataType>[] = [
-  // Short Link
+export const Columns = ({
+  handleDelete,
+}: ColumnsProps): ColumnDef<linksDataType>[] => [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label='Select all'
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label='Select row'
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: 'shortlink',
     header: 'Short Link',
@@ -27,16 +63,22 @@ export const Columns: ColumnDef<linksDataType>[] = [
       const shortlink: string = row.getValue('shortlink');
       return (
         <div className='flex items-center gap-2'>
-          <a
-            href={shortlink}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='hover:text-blue-700 hover:underline'
+          <span
+            onClick={() =>
+              window.open(shortlink, '_blank', 'noopener,noreferrer')
+            }
+            className='cursor-pointer hover:text-blue-700 hover:underline'
+            role='link'
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                window.open(shortlink, '_blank', 'noopener,noreferrer');
+              }
+            }}
           >
-            {shortlink.length > 30
-              ? `${shortlink.substring(0, 30)}...`
-              : shortlink}
-          </a>
+            {formatLinks(shortlink)}
+          </span>
+
           <Copy
             className='h-4 w-4 cursor-pointer text-gray-400 shadow-black hover:text-white hover:shadow-md'
             onClick={() => handleCopy(shortlink, 'Short link')}
@@ -79,11 +121,7 @@ export const Columns: ColumnDef<linksDataType>[] = [
   {
     accessorKey: 'qrcode',
     header: 'QR Code',
-    cell: ({ row }) => (
-      <Link to={`/img?qr=${encodeURIComponent(row.getValue('qrcode'))}`}>
-        <img src={row.getValue('qrcode')} alt='QR Code' className='w-18 h-18' />
-      </Link>
-    ),
+    cell: ({ row }) => <QrcodeModal imgUri={row.getValue('qrcode')} shortLink={row.getValue('shortlink')} />,
   },
   //   Clicks
   {
@@ -121,7 +159,6 @@ export const Columns: ColumnDef<linksDataType>[] = [
       );
     },
   },
-  // Date
   {
     accessorKey: 'date',
     header: ({ column }) => (
@@ -130,13 +167,72 @@ export const Columns: ColumnDef<linksDataType>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
       >
         Date
-        <ArrowUpDown className='h-4 w-4' />
-        <p className='text-[11px]'>{column.getIsSorted()}</p>
+        <ArrowUpDown className='ml-2 h-4 w-4' />
       </Button>
     ),
     cell: ({ row }) => {
       const date = new Date(row.getValue('date'));
       return <div>{formatDate(date, 'dd-MM-yy hh:mm aa')}</div>;
+    },
+  },
+  {
+    id: 'actions',
+    enableHiding: false,
+    cell: ({ row }) => {
+      const link = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant='ghost' className='h-8 w-8 p-0'>
+              <span className='sr-only'>Open menu</span>
+              <Ellipsis className='h-4 w-4' />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align='end'
+            className='border-gray-700 bg-gray-900 text-white'
+          >
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => handleCopy(link.shortlink, 'Short link')}
+              className='cursor-pointer hover:bg-gray-800'
+            >
+              <Copy className='mr-2 h-4 w-4' />
+              Copy short link
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleCopy(link.originallink, 'Original link')}
+              className='cursor-pointer hover:bg-gray-800'
+            >
+              <Copy className='mr-2 h-4 w-4' />
+              Copy original link
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className='bg-gray-700' />
+            <DropdownMenuItem className='cursor-pointer hover:bg-gray-800'>
+              {link.status ? (
+                <>
+                  <EyeOff className='mr-2 h-4 w-4' />
+                  Deactivate
+                </>
+              ) : (
+                <>
+                  <Eye className='mr-2 h-4 w-4' />
+                  Activate
+                </>
+              )}
+            </DropdownMenuItem>
+            <Button
+              variant='destructive'
+              className='flex w-full items-center justify-start hover:cursor-pointer hover:bg-red-800'
+              onClick={() => handleDelete(link)}
+            >
+              <Trash2 className='pointer-events-none z-10 h-4 w-4' />
+              Delete
+            </Button>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
     },
   },
 ];

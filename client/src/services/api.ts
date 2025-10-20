@@ -62,3 +62,14 @@ export const getAllLinksApi = async (): Promise<linksDataType[]> => {
     throw new Error(errorMessage);
   }
 };
+
+export const deleteUrlApi = async (id: string) => {
+  try {
+    const response = await api.delete<linksDataType[]>(`${API_ENDPOINT}/${id}`);
+    return response.data
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.error || 'Could not delete link!!';
+    throw new Error(errorMessage);
+  }
+};

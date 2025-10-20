@@ -13,7 +13,6 @@ import { useUser } from '@clerk/clerk-react';
 
 const HomePage = lazy(() => import('../pages/HomePage.tsx'));
 const Login = lazy(() => import('../pages/Login.tsx'));
-const QrCode = lazy(() => import('../pages/QrCode.tsx'));
 const Signup = lazy(() => import('../pages/Signup.tsx'));
 const Error = lazy(() => import('../pages/ErrorPage.tsx'));
 
@@ -53,7 +52,6 @@ const AppRouter = () => {
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
             <Route path='/' element={<HomePage />} />
-            <Route path='/img' element={<QrCode />} />
           </Route>
 
           {/* Default Route / Fallback Route */}

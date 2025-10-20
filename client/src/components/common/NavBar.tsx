@@ -5,10 +5,12 @@ import Linkly from '../../assets/Linkly.png';
 import SignIn from '../../assets/sign-in.svg';
 
 import { useEffect, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import UserMenu from '../Shadcn/dropdown-menu/UserMenu';
 import { Skeleton } from '../ui/skeleton';
 
 const NavBar = () => {
+  const isDesktop  = useMediaQuery({ minWidth: '1024px' });
   const { isSignedIn, isLoaded, user } = useUser();
   const location = useLocation();
   const pathname = location.pathname;
@@ -26,7 +28,7 @@ const NavBar = () => {
 
   return (
     <div
-      className={`duration-200 z-0 mx-5 my-6 flex h-fit min-w-[90vw] items-center justify-between transition-transform md:mx-10 ${scrollHeight > 75 ? 'sticky left-0 right-0 top-0 mx-auto bg-black/45 py-5 w-full px-10' : 'relative'}`}
+      className={`z-0 mx-5 my-6 flex h-fit min-w-[90vw] items-center justify-between transition-transform duration-200 md:mx-10 ${scrollHeight > 75 && isDesktop ? 'sticky left-0 right-0 top-0 z-20 mx-auto w-full bg-black/80 px-10 py-5' : 'relative'}`}
     >
       <img src={Linkly} alt='Linkly text' className='max-w-[20vw]' />
 

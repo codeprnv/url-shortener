@@ -77,12 +77,12 @@ const Login = () => {
   const isLoaded = signInLoaded && signUpLoaded
 
   return (
-    <div className='flex h-screen w-screen min-w-[#375px] flex-col items-center'>
+    <div className='flex h-screen w-screen min-w-[375px] flex-col items-center'>
       <NavBar />
       <img
         src={loginBg}
         alt='login-bg'
-        className='absolute top-0 z-[-1] h-screen w-full min-w-[#375px] overflow-hidden object-cover'
+        className='absolute top-0 z-[-1] h-screen w-full min-w-[375px] overflow-hidden object-cover'
       />
       <div className='m-1 flex max-h-fit min-w-[90vw] flex-col items-center gap-5 rounded-3xl bg-[#0D1226] p-5 text-white shadow-2xl shadow-[#1B3582] ring-2 ring-[#1B3582] md:min-w-[65vw] lg:min-w-[55vw] lg:gap-8 lg:p-10 xl:min-w-[30vw]'>
         {/* Logo Header */}

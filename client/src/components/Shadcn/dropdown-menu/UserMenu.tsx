@@ -1,16 +1,5 @@
 'use client';
 
-import { useClerk } from '@clerk/clerk-react';
-import type { UserResource } from '@clerk/types';
-import {
-  BadgeCheckIcon,
-  BellIcon,
-  ChevronDown,
-  CreditCardIcon,
-  LogOutIcon,
-  SparklesIcon,
-} from 'lucide-react';
-import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,6 +11,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useClerk } from '@clerk/clerk-react';
+import type { UserResource } from '@clerk/types';
+import {
+  BadgeCheckIcon,
+  BellIcon,
+  ChevronDown,
+  CreditCardIcon,
+  LogOutIcon,
+  SparklesIcon,
+} from 'lucide-react';
+import React from 'react';
 import toast from 'react-hot-toast';
 
 interface UserMenuProps {
@@ -55,7 +55,7 @@ export default function UserMenu({ User }: UserMenuProps) {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant='ghost' className='gap-2 bg-[#4650D0] px-2 text-white'>
+        <Button variant='ghost' className='gap-2 bg-[#4650D0] px-2 '>
           <Avatar className='size-6 rounded-lg'>
             <AvatarImage
               src={User?.hasImage ? User.imageUrl : fallbackUser.avatar}
@@ -63,7 +63,7 @@ export default function UserMenu({ User }: UserMenuProps) {
             />
             <AvatarFallback className='rounded-lg'>U</AvatarFallback>
           </Avatar>
-          <div className='truncate'>{User?.firstName}</div>
+          <div className='truncate text-white hover:text-black'>{User?.firstName}</div>
           <ChevronDown />
         </Button>
       </DropdownMenuTrigger>

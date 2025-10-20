@@ -1,4 +1,4 @@
-import { getAllLinksApi, shortenUrlApi } from '@/services/api';
+import { deleteUrlApi, getAllLinksApi, shortenUrlApi } from '@/services/api';
 import type { linksDataType } from '@/utils/linksData';
 import useSWR from 'swr';
 
@@ -44,10 +44,38 @@ export function useLinks() {
       throw err;
     }
   };
+
+  const deleteLinks = async (linksToDelete: linksDataType[]) => {
+    const originalData = data;
+
+    const optimisticData = data?.filter(
+      (link) => !linksToDelete.find((ltd) => ltd._id === link._id)
+    );
+
+    mutate(optimisticData, false);
+
+    try {
+      await Promise.all(
+        linksToDelete.map((link) => {
+          const shortId = link.shortlink.split('/')[3];
+          if (!shortId) {
+            throw new Error(`Invalid shortlink format: ${link.shortlink}`);
+          }
+          return deleteUrlApi(shortId)
+        })
+      );
+      
+    } catch (err) {
+      mutate(originalData, false)
+      throw err
+    }
+  };
+
   return {
     links: data,
     error,
     isLoading,
     addLink,
+    deleteLinks
   };
 }
