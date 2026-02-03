@@ -168,7 +168,6 @@ export const Columns = ({
       >
         Date
         <ArrowUpDown className='ml-2 h-4 w-4' />
-        <ArrowUpDown className='ml-2 h-4 w-4' />
       </Button>
     ),
     cell: ({ row }) => {
